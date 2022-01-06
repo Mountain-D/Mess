@@ -21,7 +21,7 @@ moving_left = False
 moving_up = False
 moving_down = False
 
-player_location = [200, 200]
+player_location = [200, 400]
 
 f = open('junk/map.txt')
 map_data = [[int(c) for c in row] for row in f.read().split('\n')]
