@@ -23,8 +23,6 @@ moving_down = False
 
 player_location = [200, 200]
 
-player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
-
 f = open('junk/map.txt')
 map_data = [[int(c) for c in row] for row in f.read().split('\n')]
 f.close()
@@ -40,9 +38,6 @@ while True:
         player_location[1] -= 4
     if moving_down == True:
         player_location[1] += 4
-
-    player_rect.x = player_location[0]
-    player_rect.y = player_location[1]
 
     for y, row in enumerate(map_data):
         for x,tile in enumerate(row):
