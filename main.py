@@ -62,16 +62,12 @@ while True:
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == 1:
-                pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
                 display.blit(tile_1, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
             if tile == 2:
-                pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
                 display.blit(tile_2, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
             if tile == 3:
-                pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
                 display.blit(tile_3, ((160 + x * 32 - y * 32)- scroll[0], (76 + x * 16 + y * 16)- scroll[1]))
             if tile == 4:
-                pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
                 display.blit(tile_4, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
 
     display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
