@@ -16,6 +16,10 @@ display = pygame.Surface((900, 900))
 
 tileset_img = pygame.image.load('junk/tilesetmelkas.png').convert()
 
+tile_1 = tileset_img.subsurface((19, 147, 64, 36))
+tile_2 = tileset_img.subsurface((147, 73, 64, 36))
+tile_3 = tileset_img.subsurface((147, 13, 64, 60))
+tile_4 = tileset_img.subsurface((147, 147, 64, 36))
 
 player_img = pygame.image.load('junk/player_img.png')
 
@@ -59,16 +63,16 @@ while True:
         for x, tile in enumerate(row):
             if tile == 1:
                 pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
-                display.blit(tileset_img, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]), (19, 147, 64, 36))
+                display.blit(tile_1, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
             if tile == 2:
                 pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
-                display.blit(tileset_img, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]), (147, 73, 64, 36))
+                display.blit(tile_2, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
             if tile == 3:
                 pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
-                display.blit(tileset_img, ((160 + x * 32 - y * 32)- scroll[0], (76 + x * 16 + y * 16)- scroll[1]), (147, 13, 64, 60))
+                display.blit(tile_3, ((160 + x * 32 - y * 32)- scroll[0], (76 + x * 16 + y * 16)- scroll[1]))
             if tile == 4:
                 pygame.draw.rect(display, (255, 255, 255), pygame.Rect(x * 10, y * 10, 10, 10), 1)
-                display.blit(tileset_img, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]), (147, 147, 64, 36))
+                display.blit(tile_4, ((160 + x * 32 - y * 32)- scroll[0], (100 + x * 16 + y * 16)- scroll[1]))
 
     display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
 
