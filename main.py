@@ -16,15 +16,15 @@ player_img = pygame.image.load('junk/player_img.png')
 
 tileset_img = pygame.image.load('junk/tilesetmelkas.png')
 
-tile_1 = pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36))
-tile_2 = pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36))
-tile_3 = pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))
+#tile_1 = pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36))
+#tile_2 = pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36))
+#tile_3 = pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))
 
-from map import map_data
+from map import *
 
-CHUNK_SIZE = 8
-
-
+tile_index = {1:pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36)),
+              2:pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36)),
+              3:pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))}
 
 moving_right = False
 moving_left = False
@@ -35,11 +35,11 @@ true_scroll = [0, 0]
 
 player_location = [400, 400]
 
-player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
+CHUNK_SIZE = 8
 
-tile_1_rect = pygame.Rect(tile_1.get_rect())
-tile_2_rect = pygame.Rect(tile_2.get_rect())
-tile_3_rect = pygame.Rect(tile_3.get_rect())
+map_data = []
+
+player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
 
 while True:
     display.fill((0, 0, 0))
@@ -64,22 +64,35 @@ while True:
     if moving_down == True:
         player_location[1] += 4
 
-    tiles = []
-    for y, row in enumerate(map_data):
-        for x, tile in enumerate(row):
-            if tile == 1:
-                tiles.append(pygame.Rect(tile_1_rect))
-                display.blit(tile_1, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
-            if tile == 2:
-                display.blit(tile_2, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
-            if tile == 3:
-                display.blit(tile_3, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+
+    tile_rects = []
+
+    # chunk_data = ([[target_x, target_y], tile_type])
+    #chunk_data = []
+
+    for y in range(4):
+        for x in range(4):
+            target_x = x - 1 + int(round(scroll[0] / (CHUNK_SIZE * 16)))
+            target_y = y - 1 + int(round(scroll[1] / (CHUNK_SIZE * 16)))
+            target_chunk = generate_chunk(target_x, target_y)
+            for y, row in enumerate(target_chunk):
+                for x, tile in enumerate(row):
+                    if tile == 1:
+                        display.blit(tile_index[1], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                    if tile == 2:
+                        display.blit(tile_index[2], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                    if tile == 3:
+                        display.blit(tile_index[3], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+
+
+
+    print(map_data)
 
 
     display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
 
-    if player_rect.colliderect(Rect(tile_1_rect)):
-        print("blyad")
+    #if player_rect.colliderect(Rect(tile_index[1])):
+     #   print('oops')
 
     for event in pygame.event.get():
 
