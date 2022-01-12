@@ -22,6 +22,10 @@ tile_3 = pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))
 
 from map import map_data
 
+CHUNK_SIZE = 8
+
+
+
 moving_right = False
 moving_left = False
 moving_up = False
@@ -32,6 +36,10 @@ true_scroll = [0, 0]
 player_location = [400, 400]
 
 player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
+
+tile_1_rect = pygame.Rect(tile_1.get_rect())
+tile_2_rect = pygame.Rect(tile_2.get_rect())
+tile_3_rect = pygame.Rect(tile_3.get_rect())
 
 while True:
     display.fill((0, 0, 0))
@@ -60,6 +68,7 @@ while True:
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == 1:
+                tiles.append(pygame.Rect(tile_1_rect))
                 display.blit(tile_1, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
             if tile == 2:
                 display.blit(tile_2, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
@@ -69,8 +78,8 @@ while True:
 
     display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
 
-#    if player_rect.colliderect(Rect(tile_1)):
- #       print("blyad")
+    if player_rect.colliderect(Rect(tile_1_rect)):
+        print("blyad")
 
     for event in pygame.event.get():
 
