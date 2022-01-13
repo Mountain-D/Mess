@@ -10,11 +10,9 @@ f = open('junk/map.txt')
 map_data = [[int(column) for column in row] for row in f.read().split('\n')]
 f.close()
 
-CHUNK_SIZE = 8
+CHUNK_SIZE = 16
 
 def generate_chunk(x, y):
-    chunk_data = []
-    tile_type = []
     for y_pos in range(CHUNK_SIZE):
         for x_pos in range(CHUNK_SIZE):
             target_x = x * CHUNK_SIZE + x_pos

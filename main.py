@@ -35,9 +35,9 @@ true_scroll = [0, 0]
 
 player_location = [400, 400]
 
-CHUNK_SIZE = 8
+CHUNK_SIZE = 16
 
-map_data = []
+
 
 player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
 
@@ -70,25 +70,22 @@ while True:
     # chunk_data = ([[target_x, target_y], tile_type])
     #chunk_data = []
 
-    for y in range(4):
-        for x in range(4):
-            target_x = x - 1 + int(round(scroll[0] / (CHUNK_SIZE * 16)))
-            target_y = y - 1 + int(round(scroll[1] / (CHUNK_SIZE * 16)))
-            target_chunk = generate_chunk(target_x, target_y)
-            for y, row in enumerate(target_chunk):
-                for x, tile in enumerate(row):
-                    if tile == 1:
-                        display.blit(tile_index[1], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
-                    if tile == 2:
-                        display.blit(tile_index[2], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
-                    if tile == 3:
-                        display.blit(tile_index[3], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+    for y, row in enumerate(map_data):
+        for x, tile in enumerate(row):
+            for y in range(8):
+                for x in range(8):
+                    target_x = x - 1 + int(round(scroll[0] / (CHUNK_SIZE * 64)))
+                    target_y = y - 1 + int(round(scroll[1] / (CHUNK_SIZE * 32)))
+                    target_chunk = [target_x, target_y]
+                    for tile in target_chunk:
+                        if tile == 1:
+                            display.blit(tile_index[1], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                        if tile == 2:
+                            display.blit(tile_index[2], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                        if tile == 3:
+                            display.blit(tile_index[3], ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
 
-
-
-    print(map_data)
-
-
+    print(target_chunk)
     display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
 
     #if player_rect.colliderect(Rect(tile_index[1])):
