@@ -106,8 +106,9 @@ while True:
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == 1:
-
-                screen.blit(tile_1, ((160 + x * 32 - y * 32), (100 + x * 16 + y * 16)))
+                one_tile = pygame.Rect((160 + x * 32 - y * 32), (100 + x * 16 + y * 16), 64, 36)
+                screen.blit(tile_1, one_tile)
+                tiles.append(one_tile)
             if tile == 2:
                 grass_group.draw(tile_2).copy()
                 screen.blit(tile_2, ((160 + x * 32 - y * 32), (100 + x * 16 + y * 16)))
