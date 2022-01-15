@@ -8,9 +8,18 @@ pygame.init()
 pygame.display.set_caption('Mess')
 logo = pygame.image.load("junk/Icon.png")
 pygame.display.set_icon(logo)
-WINDOW_SIZE = (1024, 800)
+WINDOW_SIZE = (800, 800)
 screen = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
-display = pygame.Surface((900, 900))
+display_x = 800
+display_y = 800
+display = pygame.Surface((display_x, display_y))
+
+
+tileset_img = pygame.image.load('junk/tilesetmelkas.png')
+tile_1 = pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36))
+tile_2 = pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36))
+tile_3 = pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))
+
 
                 ###
 
@@ -22,134 +31,104 @@ class Tile(pygame.sprite.Sprite):
         self.image = image
         self.rect = self.image.get_rect()
 
+
+
 tileset_img = pygame.image.load('junk/tilesetmelkas.png')
 tile_water = Tile(pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36)))
 tile_grass = Tile(pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36)))
 tile_dirt = Tile(pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36)))
 
-tile_group = pygame.sprite.Group()
 
-tile_group.add(tile_water)
-tile_group.add(tile_grass)
-tile_group.add(tile_dirt)
+water_group = pygame.sprite.Group()
+grass_group = pygame.sprite.Group()
+dirt_group = pygame.sprite.Group()
 
-#player sprite not done
+water_group.add(tile_water)
+grass_group.add(tile_grass)
+dirt_group.add(tile_dirt)
+
+
 class Player(pygame.sprite.Sprite):
-    def __init__(self, image):
+    def __init__(self):
         super().__init__()
-        self.image = image
+        self.image = pygame.image.load('junk/player_img.png')
         self.rect = self.image.get_rect()
-    def player_location(self, x, y):
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.centerx = display_x / 2
+        self.rect.bottom = display_y / 2
+        self.speedx = 0
+        self.speedy = 0
+    def update(self):
+        self.speedx = 0
+        self.speedy = 0
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_a]:
+            self.speedx = - 4
+        if keys[pygame.K_d]:
+            self.speedx = + 4
+        if keys[pygame.K_w]:
+            self.speedy = - 4
+        if keys[pygame.K_s]:
+            self.speedy = +4
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        if self.rect.right > display_x:
+            self.rect.right = display_y
+        if self.rect.left < 0:
+            self.rect.left = 0
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > display_x:
+            self.rect.bottom = display_y
 
-    def walking(self):
-        self.is_walk = True
 
-    def swim(self):
-        self.is_swim = True
+player = Player()
 
-   def update(self):
-       if self.is_swim == True:
+all_sprites = pygame.sprite.Group()
+
+all_sprites.add(player)
 
 
+                ###
 
-
-walking = Player(pygame.image.load('junk/player_img.png'))
-swiming = Player(pygame.image.load('junk/player_img_swim.png'))
-
-player_group = pygame.sprite.Group()
-
-player_group.add(walking)
-player_group.add(swiming)
-
-#MAP READ
-
-f = open('junk/map.txt')
-map_data = [[int(column) for column in row] for row in f.read().split('\n')]
-f.close()
-
-#???scroll and move NEED TO ORGANIZE THIS
-
-moving_right = False
-moving_left = False
-moving_up = False
-moving_down = False
-
-true_scroll = [0, 0]
-
-player_location = [400, 400]
-
-'''
-player_rect = pygame.Rect(player_location[0], player_location[1], player_img.get_width(), player_img.get_height())
-'''
 
 #GAME LOOP mess as well
 
 while True:
-    display.fill((0, 0, 0))
 
-    true_scroll[0] += (Player.x - true_scroll[0] - 420) / 10
-    true_scroll[1] += (Player.y - true_scroll[1] - 420) / 10
-    scroll = true_scroll.copy()
-    scroll[0] = int(scroll[0])
-    scroll[1] = int(scroll[1])
+    screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))
+    screen.fill((120, 120, 120))
 
-    Player.x = player_location[0]
-    Player.y = player_location[1]
-
-    player_movement = [0, 0]
-
-    if moving_right == True:
-        player_location[0] += 4
-    if moving_left == True:
-        player_location[0] -= 4
-    if moving_up == True:
-        player_location[1] -= 4
-    if moving_down == True:
-        player_location[1] += 4
+    f = open('junk/map.txt')
+    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+    f.close()
 
     tiles = []
-    water_tile = []
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
             if tile == 1:
-                display.blit(tile_1, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+
+                screen.blit(tile_1, ((160 + x * 32 - y * 32), (100 + x * 16 + y * 16)))
             if tile == 2:
-                display.blit(tile_2, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                grass_group.draw(tile_2).copy()
+                screen.blit(tile_2, ((160 + x * 32 - y * 32), (100 + x * 16 + y * 16)))
             if tile == 3:
-                display.blit(tile_3, ((160 + x * 32 - y * 32) - scroll[0], (100 + x * 16 + y * 16) - scroll[1]))
+                dirt_group.draw(tile_3)
+                screen.blit(tile_3, ((160 + x * 32 - y * 32), (100 + x * 16 + y * 16)))
 
-
-
-    display.blit(player_img, (player_rect.x- scroll[0], player_rect.y- scroll[1]))
+    if pygame.sprite.spritecollideany(player, water_group):
+        print('opps')
 
     for event in pygame.event.get():
-
-        if event.type == KEYDOWN:
-            if event.key == K_d:
-                moving_right = True
-            if event.key == K_a:
-                moving_left = True
-            if event.key == K_w:
-                moving_up = True
-            if event.key == K_s:
-                moving_down = True
-        if event.type == KEYUP:
-            if event.key == K_d:
-                moving_right = False
-            if event.key == K_a:
-                moving_left = False
-            if event.key == K_w:
-                moving_up = False
-            if event.key == K_s:
-                moving_down = False
-
 
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-    screen.blit(pygame.transform.scale(display, screen.get_size()), (0, 0))
+    water_group.update()
+    grass_group.update()
+    dirt_group.update()
+    all_sprites.update()
+    all_sprites.draw(screen)
+
     pygame.display.update()
     clock.tick(60)
