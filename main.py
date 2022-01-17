@@ -8,8 +8,6 @@ CLOCK = pygame.time.Clock()
 from pygame.locals import *
 pygame.init()
 
-# Remove commented shit later
-# pygame.display.set_caption('Mess')
 logo = pygame.image.load("junk/Icon.png")
 pygame.display.set_icon(logo)
 WINDOW_SIZE = (800, 800)
@@ -18,17 +16,10 @@ display_x = 800
 display_y = 800
 display = pygame.Surface((display_x, display_y))
 
-
-tileset_img = pygame.image.load('junk/tilesetmelkas.png')
-tile_1 = pygame.Surface.subsurface(tileset_img, (19, 147, 64, 36))
-tile_2 = pygame.Surface.subsurface(tileset_img, (147, 73, 64, 36))
-tile_3 = pygame.Surface.subsurface(tileset_img, (147, 147, 64, 36))
-
-
                 ###
 
 #SPRITE STUFF
-# What is this class for? It looks useless:
+
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_surface):
         super().__init__()
@@ -41,21 +32,22 @@ tile_water = Tile(pygame.Surface.subsurface(tileset_img, (19, 147, TILE_WIDTH, T
 tile_grass = Tile(pygame.Surface.subsurface(tileset_img, (147, 73, TILE_WIDTH, TILE_HEIGHT)))
 tile_dirt = Tile(pygame.Surface.subsurface(tileset_img, (147, 147, TILE_WIDTH, TILE_HEIGHT)))
 
-# I don't see how this helps - you have 3 groups and each of them contains just 1 object of the Tile ¯\_(ツ)_/¯
-# water_group = pygame.sprite.Group()
-# grass_group = pygame.sprite.Group()
-# dirt_group = pygame.sprite.Group()
-#
-# water_group.add(tile_water)
-# grass_group.add(tile_grass)
-# dirt_group.add(tile_dirt)
+tile_water_mask = pygame.mask.from_surface(tile_water.tile_surface)
+tile_grass_mask = pygame.mask.from_surface(tile_grass.tile_surface)
+tile_dirt_mask = pygame.mask.from_surface(tile_dirt.tile_surface)
 
+swim_img = pygame.image.load('junk/player_img_swim.png')
+walk_image = pygame.image.load('junk/player_img.png')
+
+#tile_surface = self.tile_surface
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pygame.image.load('junk/player_img.png')
+        self.collide_mask = pygame.image.load('junk/player_cillision_mask.png')
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.collide_mask)
         self.rect.centerx = display_x / 2
         self.rect.bottom = display_y / 2
         self.speedx = 0
@@ -65,13 +57,13 @@ class Player(pygame.sprite.Sprite):
         self.speedy = 0
         keys = pygame.key.get_pressed()
         if keys[pygame.K_a]:
-            self.speedx = - 4
+            self.speedx = - 3
         if keys[pygame.K_d]:
-            self.speedx = + 4
+            self.speedx = + 3
         if keys[pygame.K_w]:
-            self.speedy = - 4
+            self.speedy = - 3
         if keys[pygame.K_s]:
-            self.speedy = +4
+            self.speedy = + 3
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         if self.rect.right > display_x:
@@ -110,16 +102,19 @@ while True:
     # bad_rect_arrays = []
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
-            # You're already doing a lot of calculations each frame. Better to do not repeat yourself:
             x_tile_location = 160 + x * 32 - y * 32
             y_tile_location = 100 + x * 16 + y * 16
+            offset_x = x_tile_location - player.rect.left
+            offset_y = y_tile_location - player.rect.top
             current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH, TILE_HEIGHT)
             if tile == 1:
                 screen.blit(tile_water.tile_surface, current_position)
-
                 # Option #1 - currently running:
-                if pygame.Rect.colliderect(player.rect, current_position):
-                    print('oops')
+                if player.mask.overlap(tile_water_mask, (offset_x, offset_y)):
+                    player.image = swim_img
+
+                #if pygame.Rect.colliderect(player.rect, current_position):
+                     #print('oops')
 
                 # If you want to use a Tile as an object here, this 'if' check (above) can be implemented as
                 # a Tile's function (added under Tile class, with an extra logic if required),
@@ -135,8 +130,13 @@ while True:
 
             elif tile == 2:
                 screen.blit(tile_grass.tile_surface, current_position)
+                if player.mask.overlap(tile_grass_mask, (offset_x, offset_y)):
+                    player.image = walk_image
+
             elif tile == 3:
                 screen.blit(tile_dirt.tile_surface, current_position)
+                if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
+                    player.image = walk_image
 
     # Option #2:
     # or 'slower' option (depends on how many blocking tiles do you have):
@@ -152,13 +152,10 @@ while True:
             pygame.quit()
             sys.exit()
 
-    # water_group.update()
-    # grass_group.update()
-    # dirt_group.update()
+
     all_sprites.update()
     all_sprites.draw(screen)
 
     pygame.display.update()
-    CLOCK.tick(FPS)
-    # Let's check the performance - look at how FPS drops when you try to move the mouse of walk to the land
+    CLOCK.tick(60)
     pygame.display.set_caption('Mess' + ' ' * 10 + 'FPS: ' + str(int(CLOCK.get_fps())))
