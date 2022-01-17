@@ -83,6 +83,9 @@ all_sprites = pygame.sprite.Group()
 all_sprites.add(player)
 
 
+true_scroll = [0, 0]
+
+
                 ###
 
 
@@ -97,36 +100,24 @@ while True:
     map_data = [[int(column) for column in row] for row in f.read().split('\n')]
     f.close()
 
-    # Option #2:
-    # This is an array of objects which we would check for collision later, like water, walls and trees
-    # bad_rect_arrays = []
+    true_scroll[0] += (player.rect.left - true_scroll[0] - (display_x / 2)) / 10
+    true_scroll[1] += (player.rect.top - true_scroll[1] - (display_x / 2)) / 10
+    scroll = true_scroll.copy()
+    scroll[0] = int(scroll[0])
+    scroll[1] = int(scroll[1])
+
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
-            x_tile_location = 160 + x * 32 - y * 32
-            y_tile_location = 100 + x * 16 + y * 16
+            x_tile_location = 160 + x * 32 - y * 32 - (scroll[0])
+            y_tile_location = 100 + x * 16 + y * 16 - (scroll[1])
             offset_x = x_tile_location - player.rect.left
             offset_y = y_tile_location - player.rect.top
-            current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH, TILE_HEIGHT)
+            current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH , TILE_HEIGHT)
+
             if tile == 1:
                 screen.blit(tile_water.tile_surface, current_position)
-                # Option #1 - currently running:
                 if player.mask.overlap(tile_water_mask, (offset_x, offset_y)):
                     player.image = swim_img
-
-                #if pygame.Rect.colliderect(player.rect, current_position):
-                     #print('oops')
-
-                # If you want to use a Tile as an object here, this 'if' check (above) can be implemented as
-                # a Tile's function (added under Tile class, with an extra logic if required),
-                # but Tile in this case should not use Surface class in the constructor
-                # (constructor is what you use when you create an instance of an object - see lines 40-42)
-                # because it does not carry information about current position.
-                # If you look at the Surface description it says:
-                # "Surface((width, height)...)"
-                # i.e. surface default values are just width and height of the surface + the picture
-
-                # Option #2:
-                # bad_rect_arrays.append(current_position)
 
             elif tile == 2:
                 screen.blit(tile_grass.tile_surface, current_position)
@@ -138,13 +129,6 @@ while True:
                 if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
                     player.image = walk_image
 
-    # Option #2:
-    # or 'slower' option (depends on how many blocking tiles do you have):
-    # for bad_rect in bad_rect_arrays:
-    #     if pygame.Rect.colliderect(player.rect, bad_rect):
-    #         print('oops')
-    # On my ancient laptop this app already runs at max of 115fps on land an around 90-100 on water
-    # so it's important for me :)
 
     for event in pygame.event.get():
 
