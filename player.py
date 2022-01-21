@@ -13,6 +13,8 @@ class Player:
 
         self.walk = pygame.image.load('junk/player_img.png')
         self.rect = self.walk.get_rect()
+        self.collide = pygame.image.load('junk/player_cillision_mask.png')
+        self.mask = pygame.mask.from_surface(self.collide)
         self.left = False
         self.right = False
         self.up = False
@@ -31,8 +33,10 @@ class Player:
         self.rect.x = self.x
         self.rect.y = self.y
 
-    def render(self, x, y, sceen):
-        sceen.blit(self.walk, self.rect)
+    def render(self, x, y, screen):
+        self.rect.x += x
+        self.rect.y += y
+        screen.blit(self.walk, self.rect)
 
     def key_down(self, key):
         if key == pygame.K_a:

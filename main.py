@@ -6,9 +6,9 @@ from pygame.locals import *
 from math import *
 from player import Player
 
-def render(display, player):
-    pygame.draw.rect(display, (255, 255, 255), (0 + player.x, 0 + player.y, 370, 370))
-    player.render(player.x, player.y, screen)
+def render(x, y, screen, player):
+
+    player.render(x, y, screen)
 
 def update(player):
     player.update()
@@ -21,6 +21,8 @@ pygame.init()
 
 TILE_WIDTH = 64
 TILE_HEIGHT = 32
+
+true_scroll = [0, 0]
 
 player = Player()
 
@@ -50,17 +52,12 @@ tile_grass_mask = pygame.mask.from_surface(tile_grass)
 tile_dirt_mask = pygame.mask.from_surface(tile_dirt)
 
 swim_img = pygame.image.load('junk/player_img_swim.png')
-walk_image = pygame.image.load('junk/player_img.png')
-
-player_col_mask = pygame.image.load('junk/player_cillision_mask.png')
-
-player_mask = pygame.mask.from_surface(player_col_mask)
 
     #READ MAP
 
-f = open('junk/map.txt')
-map_data = [[int(column) for column in row] for row in f.read().split('\n')]
-f.close()
+with open('junk/map.txt') as f:
+    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+
 
         #GAME LOOP
 
@@ -88,30 +85,38 @@ while True:
 
     #RENDER
 
+    screen.blit(pygame.transform.scale(display, WINDOW_SIZE), (0, 0))
+
     screen.fill((120, 120, 120))
+
+    true_scroll[0] += (player.x-true_scroll[0] - 370) / 10
+    true_scroll[1] += (player.y-true_scroll[1] - 370) / 10
+    scroll = true_scroll.copy()
+    scroll[0] = int(scroll[0])
+    scroll[1] = int(scroll[1])
 
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
 
-            x_tile_location = 160 + x * 32 - y * 32
-            y_tile_location = 100 + x * 16 + y * 16
-            offset_x = x_tile_location
-            offset_y = y_tile_location
-            current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH , TILE_HEIGHT)
+            x_tile_location = 160 + x * 32 - y * 32 - scroll[0]
+            y_tile_location = 100 + x * 16 + y * 16 - scroll[1]
+            offset_x = x_tile_location - 370
+            offset_y = y_tile_location - 370
+            current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH, TILE_HEIGHT)
 
             if tile == 1:
                 screen.blit(tile_water, current_position)
-                #if player_mask.overlap(tile_water_mask, (offset_x, offset_y)):
-                  #  player_image = swim_img
+                if player.mask.overlap(tile_water_mask, (offset_x, offset_y)):
+                    print('ooooh')
 
             elif tile == 2:
                 screen.blit(tile_grass, current_position)
                 #if player.mask.overlap(tile_grass_mask, (offset_x, offset_y)):
-                #    player.mage = walk_image
+
 
             elif tile == 3:
                 screen.blit(tile_dirt, current_position)
                 #if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
-                #    player.image = walk_image
 
-    render(display, player)
+
+    render(0 - scroll[0], 0 - scroll[1], screen, player)
