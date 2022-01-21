@@ -1,16 +1,16 @@
 import pygame, sys, os, random
 from pygame.locals import *
-from math import *
 
 class Player:
     def __init__(self):
-        self.x = 370
-        self.y = 370
+        self.x = 400
+        self.y = 400
 
         self.velocity = 0
         self.acceleration = 1
         self.topSpeed = 8
 
+        self.swim = pygame.image.load('junk/player_img_swim.png')
         self.walk = pygame.image.load('junk/player_img.png')
         self.rect = self.walk.get_rect()
         self.collide = pygame.image.load('junk/player_cillision_mask.png')
@@ -19,6 +19,11 @@ class Player:
         self.right = False
         self.up = False
         self.down = False
+
+        self.image = self.walk
+
+        self.swiming = False
+        self.walking = False
 
     def update(self):
         if self.left:
@@ -29,14 +34,19 @@ class Player:
             self.y -= 3
         if self.down:
             self.y += 3
-
         self.rect.x = self.x
         self.rect.y = self.y
 
     def render(self, x, y, screen):
         self.rect.x += x
         self.rect.y += y
-        screen.blit(self.walk, self.rect)
+        screen.blit(self.image, self.rect)
+
+        if self.swiming == True:
+            self.image = self.swim
+
+        if self.walking == True:
+            self.image = self.walk
 
     def key_down(self, key):
         if key == pygame.K_a:

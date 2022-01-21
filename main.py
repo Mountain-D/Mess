@@ -3,7 +3,6 @@
 import pygame, sys, os, random
 
 from pygame.locals import *
-from math import *
 from player import Player
 
 def render(x, y, screen, player):
@@ -51,7 +50,6 @@ tile_water_mask = pygame.mask.from_surface(tile_water)
 tile_grass_mask = pygame.mask.from_surface(tile_grass)
 tile_dirt_mask = pygame.mask.from_surface(tile_dirt)
 
-swim_img = pygame.image.load('junk/player_img_swim.png')
 
     #READ MAP
 
@@ -107,16 +105,20 @@ while True:
             if tile == 1:
                 screen.blit(tile_water, current_position)
                 if player.mask.overlap(tile_water_mask, (offset_x, offset_y)):
-                    print('ooooh')
+                    player.swiming = True
+                    player.walking = False
 
             elif tile == 2:
                 screen.blit(tile_grass, current_position)
-                #if player.mask.overlap(tile_grass_mask, (offset_x, offset_y)):
-
+                if player.mask.overlap(tile_grass_mask, (offset_x, offset_y)):
+                    player.walking = True
+                    player.swiming = False
 
             elif tile == 3:
                 screen.blit(tile_dirt, current_position)
-                #if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
+                if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
+                    player.walking = True
+                    player.swiming = False
 
 
     render(0 - scroll[0], 0 - scroll[1], screen, player)
