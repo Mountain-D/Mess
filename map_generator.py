@@ -27,14 +27,14 @@ DISPLAY = pygame.Surface((DISPLAY_X, DISPLAY_Y))
 
 CLOCK = pygame.time.Clock()
 
-blank_tile = [[1] * 200] * 200
+blank_tile = [[1] * 50] * 50
 
     #MAP READ / WRITE
 
 with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
     map_data = [[int(column) for column in row] for row in f.read().split('\n')]
 
-    #CREATE 200 * 200 BLANK [1] TILEMAP
+#CREATE 50 x 50 BLANK [1] TILEMAP
 
 with open('junk/maps_dump/map_test_gen.txt', 'w') as f:
     for line in blank_tile:

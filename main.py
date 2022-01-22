@@ -55,12 +55,12 @@ tile_dirt_mask = pygame.mask.from_surface(tile_dirt)
 
     #READ MAP
 
-with open('junk/map.txt', 'r') as f:
-    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
-
-
-#with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
+#with open('junk/map.txt', 'r') as f:
 #    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+
+
+with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
+    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
 
         #GAME LOOP
 
@@ -83,7 +83,7 @@ while True:
     update(player)
 
     pygame.display.update()
-    CLOCK.tick(FPS)
+    CLOCK.tick()
     pygame.display.set_caption('Mess' + ' ' * 10 + 'FPS: ' + str(int(CLOCK.get_fps())))
 
     #RENDER
@@ -124,6 +124,5 @@ while True:
                 if player.mask.overlap(tile_dirt_mask, (offset_x, offset_y)):
                     player.walking = True
                     player.swiming = False
-
 
     render(0 - scroll[0], 0 - scroll[1], SCREEN, player)
