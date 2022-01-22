@@ -1,6 +1,6 @@
     #IMPORT & WHATEVER
 
-import pygame, sys, os, random
+import pygame, sys, os, random, math, numpy
 
 from pygame.locals import *
 from player import Player
@@ -35,7 +35,7 @@ DISPLAY_Y = 800
 logo = pygame.image.load("junk/Icon.png")
 pygame.display.set_icon(logo)
 
-SCREEN = pygame.display.set_mode(WINDOW_SIZE, 0, 32)
+SCREEN = pygame.display.set_mode(WINDOW_SIZE)
 
 DISPLAY = pygame.Surface((DISPLAY_X, DISPLAY_Y))
 
@@ -54,10 +54,6 @@ tile_dirt_mask = pygame.mask.from_surface(tile_dirt)
 
 
     #READ MAP
-
-#with open('junk/map.txt', 'r') as f:
-#    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
-
 
 with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
     map_data = [[int(column) for column in row] for row in f.read().split('\n')]
@@ -83,7 +79,7 @@ while True:
     update(player)
 
     pygame.display.update()
-    CLOCK.tick()
+    CLOCK.tick(FPS)
     pygame.display.set_caption('Mess' + ' ' * 10 + 'FPS: ' + str(int(CLOCK.get_fps())))
 
     #RENDER
@@ -98,11 +94,12 @@ while True:
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
 
+
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
 
-            x_tile_location = 160 + x * 32 - y * 32 - scroll[0]
-            y_tile_location = 100 + x * 16 + y * 16 - scroll[1]
+            x_tile_location = 400 + x * 32 - y * 32 - scroll[0]
+            y_tile_location = 400 + x * 16 + y * 16 - scroll[1]
             offset_x = x_tile_location - 370
             offset_y = y_tile_location - 370
             current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH, TILE_HEIGHT)
@@ -126,3 +123,5 @@ while True:
                     player.swiming = False
 
     render(0 - scroll[0], 0 - scroll[1], SCREEN, player)
+
+    print(f' scr : {scroll} \n curent_pos : {current_position} \n ****************************************')

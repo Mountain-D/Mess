@@ -1,6 +1,6 @@
     #IMPORT & WHATEVER
 
-import pygame, sys, os, random, opensimplex
+import pygame, sys, os, random, math, numpy, opensimplex
 
 from pygame.locals import *
 
@@ -31,8 +31,8 @@ blank_tile = [[1] * 50] * 50
 
     #MAP READ / WRITE
 
-with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
-    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+# with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
+#     map_data = [[int(column) for column in row] for row in f.read().split('\n')]
 
 #CREATE 50 x 50 BLANK [1] TILEMAP
 
@@ -53,6 +53,8 @@ while True:
             sys.exit()
 
     #UPDATE
+
+    event.type = QUIT
 
     pygame.display.update()
     CLOCK.tick(FPS)

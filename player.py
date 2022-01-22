@@ -1,8 +1,9 @@
-import pygame, sys, os, random
+import pygame, sys, os, random, math, numpy
 from pygame.locals import *
 
 class Player:
     def __init__(self):
+        #SPAWN COORD(SCREEN)
         self.x = 400
         self.y = 400
 
