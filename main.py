@@ -94,6 +94,11 @@ while True:
     scroll[0] = int(scroll[0])
     scroll[1] = int(scroll[1])
 
+    cord_x = (scroll[0] + scroll[1] * 2) / 2
+    cord_y = scroll[1] - scroll[0] / 2
+    tile_x = round(cord_x / 32)
+    tile_y = round(cord_y / 32)
+    tile_coord = (tile_x, tile_y)
 
     for y, row in enumerate(map_data):
         for x, tile in enumerate(row):
@@ -103,6 +108,7 @@ while True:
             offset_x = x_tile_location - 370
             offset_y = y_tile_location - 370
             current_position = pygame.Rect(x_tile_location, y_tile_location, TILE_WIDTH, TILE_HEIGHT)
+
 
             if tile == 1:
                 SCREEN.blit(tile_water, current_position)
@@ -122,6 +128,8 @@ while True:
                     player.walking = True
                     player.swiming = False
 
+
+
     render(0 - scroll[0], 0 - scroll[1], SCREEN, player)
 
-    print(f' scr : {scroll} \n curent_pos : {current_position} \n ****************************************')
+    print(f' current tile : {tile_coord} \n ***********************************')
