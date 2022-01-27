@@ -55,8 +55,7 @@ tile_dirt_mask = pygame.mask.from_surface(tile_dirt)
 
     #READ MAP
 
-with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
-    map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+map_data = numpy.loadtxt('junk/maps_dump/map_test_gen.txt', delimiter=' ')
 
         #GAME LOOP
 

@@ -10,6 +10,7 @@ pygame.init()
 
     #DEFINE STUFF
 
+numpy.set_printoptions(suppress=True)
 
     #VARIABLES
 
@@ -27,19 +28,17 @@ DISPLAY = pygame.Surface((DISPLAY_X, DISPLAY_Y))
 
 CLOCK = pygame.time.Clock()
 
-blank_tile = [[1] * 100] * 100
+# blank_tile = [[1] * 100] * 100
 
     #MAP READ / WRITE
 
-# with open('junk/maps_dump/map_test_gen.txt', 'r') as f:
-#     map_data = [[int(column) for column in row] for row in f.read().split('\n')]
+#load_map_data = numpy.loadtxt('junk/maps_dump/map_test_gen.txt', delimiter=' ')
 
 #CREATE 100 x 100 BLANK [1] TILEMAP
 
-with open('junk/maps_dump/map_test_gen.txt', 'w') as f:
-    for line in blank_tile:
-        line_str = [str(n) for n in line]
-        f.write(''.join(line_str) + '\n')
+map_data = numpy.empty([100, 100])
+map_data.fill(1)
+save_map_data = numpy.savetxt('junk/maps_dump/map_test_gen.txt', map_data, fmt='%i', delimiter=' ')
 
         #GAME LOOP
 
