@@ -8,10 +8,6 @@ from pygame.locals import *
 
 pygame.init()
 
-    #DEFINE STUFF
-
-numpy.set_printoptions(suppress=True)
-
     #VARIABLES
 
 FPS = 60
@@ -28,15 +24,13 @@ DISPLAY = pygame.Surface((DISPLAY_X, DISPLAY_Y))
 
 CLOCK = pygame.time.Clock()
 
-# blank_tile = [[1] * 100] * 100
-
     #MAP READ / WRITE
 
 #load_map_data = numpy.loadtxt('junk/maps_dump/map_test_gen.txt', delimiter=' ')
 
-#CREATE 100 x 100 BLANK [1] TILEMAP
+#CREATE 50 x 50 BLANK [1] TILEMAP
 
-map_data = numpy.empty([100, 100])
+map_data = numpy.empty([50, 50])
 map_data.fill(1)
 save_map_data = numpy.savetxt('junk/maps_dump/map_test_gen.txt', map_data, fmt='%i', delimiter=' ')
 
